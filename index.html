@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1713">
+  <meta name="description" content="SolidSight is an interactive 3D trigonometry lab for HKDSE students. Build solids, trace a photo, or read question text for exact dimensions, named points, and line–plane / plane–plane angles.">
+  <title>SolidSight — HKDSE 3D Trig Lab</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d8ff6a'/%3E%3Cpath d='M16 22 32 13l16 9v20L32 51l-16-9V22Z' fill='none' stroke='%2315201c' stroke-width='3'/%3E%3Cpath d='M16 22l16 9 16-9M32 31v20' fill='none' stroke='%2315201c' stroke-width='3'/%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="SolidSight home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 42 42" fill="none">
+            <path d="M8.5 14.5 21 7l12.5 7.5v14L21 36 8.5 28.5v-14Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="m8.5 14.5 12.5 7 12.5-7M21 21.5V36" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="8.5" cy="14.5" r="2.1" fill="currentColor"/>
+            <circle cx="33.5" cy="14.5" r="2.1" fill="currentColor"/>
+            <circle cx="21" cy="7" r="2.1" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <span class="brand-name">SOLIDSIGHT</span>
+          <span class="brand-sub">HKDSE 3D TRIG LAB</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary">
+        <button class="nav-link is-active" type="button" data-nav="studio">Studio</button>
+        <button class="nav-link" type="button" data-nav="photo">Photo Lab</button>
+        <button class="nav-link" type="button" data-nav="examples">Examples</button>
+      </nav>
+
+      <div class="top-actions">
+        <button class="icon-button" id="helpBtn" type="button" aria-label="How to use SolidSight" title="How to use">
+          <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.2" stroke="currentColor" stroke-width="1.5"/><path d="M8.2 7.6a1.9 1.9 0 0 1 3.65.65c0 1.25-1.85 1.45-1.85 2.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r=".9" fill="currentColor"/></svg>
+        </button>
+        <button class="button button-outline top-text-button" id="openTextBtn" type="button" aria-label="Build from question text">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4.2 3.2h8l3.6 3.6v10H4.2v-13.6Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 3.2v4h3.8M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span>Question → 3D</span>
+        </button>
+        <button class="button button-dark" id="openPhotoBtn" type="button" aria-label="Open Photo Lab">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M3.2 6.6h2.3l1.1-1.7h6.8l1.1 1.7h2.3v8.2H3.2V6.6Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10" cy="10.6" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+          <span>Photo → 3D</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel left-panel" aria-label="Model controls">
+        <div class="panel-scroll">
+          <section class="panel-section solid-section">
+            <div class="section-heading">
+              <span class="section-index">01</span>
+              <h2>Choose a solid</h2>
+            </div>
+            <div class="solid-grid" role="group" aria-label="Solid template">
+              <button class="solid-card is-active" type="button" data-shape="cuboid" aria-pressed="true">
+                <span class="solid-icon">
+                  <svg viewBox="0 0 54 44" fill="none"><path d="M10 13 27 5l17 8v18l-17 8-17-8V13Z" stroke="currentColor" stroke-width="1.5"/><path d="m10 13 17 8 17-8M27 21v18" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                <span>Cuboid</span>
+              </button>
+              <button class="solid-card" type="button" data-shape="triprism" aria-pressed="false">
+                <span class="solid-icon">
+                  <svg viewBox="0 0 54 44" fill="none"><path d="m8 16 10-8 25 8 3 19-11 6-27-6V16Z" stroke="currentColor" stroke-width="1.5"/><path d="m8 16 10-8 27 27M18 8v27" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                <span>Triangular<br>prism</span>
+              </button>
+              <button class="solid-card" type="button" data-shape="pyramid" aria-pressed="false">
+                <span class="solid-icon">
+                  <svg viewBox="0 0 54 44" fill="none"><path d="M8 31 27 38l19-7-9-24L27 4 8 31Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 31h38M27 4v34" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                <span>Square<br>pyramid</span>
+              </button>
+              <button class="solid-card" type="button" data-shape="tetrahedron" aria-pressed="false">
+                <span class="solid-icon">
+                  <svg viewBox="0 0 54 44" fill="none"><path d="M9 32 27 37l18-7-9-24L9 32Z" stroke="currentColor" stroke-width="1.5"/><path d="M9 32 27 6l9 24M27 6l18 24" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                <span>Tetrahedron</span>
+              </button>
+            </div>
+            <button class="photo-build-link" id="leftPhotoBtn" type="button">
+              <span class="photo-link-icon">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M3.2 6.6h2.3l1.1-1.7h6.8l1.1 1.7h2.3v8.2H3.2V6.6Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10" cy="10.6" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+              </span>
+              <span><strong>Build from a photo</strong><small>Trace the base, then extrude</small></span>
+              <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M4 9h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="photo-build-link text-build-link" id="leftTextBtn" type="button">
+              <span class="photo-link-icon">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4.2 3.2h8l3.6 3.6v10H4.2v-13.6Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 3.2v4h3.8M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              </span>
+              <span><strong>Read the question</strong><small>Use the exact numbers from the text</small></span>
+              <svg class="arrow" viewBox="0 0 18 18" fill="none"><path d="M4 9h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">02</span>
+              <h2>Dimensions</h2>
+            </div>
+            <div id="dimensionControls" class="dimension-controls"></div>
+            <p class="section-note" id="dimensionNote">Drag a slider. The 3D model updates live.</p>
+          </section>
+
+          <section class="panel-section derived-section" id="derivedSection" hidden>
+            <div class="section-heading">
+              <span class="section-index">02b</span>
+              <h2>Named points</h2>
+              <span class="derived-count" id="derivedCount">0</span>
+            </div>
+            <div class="derived-list" id="derivedList"></div>
+            <p class="section-note">Click a named point to inspect it. All of them appear in the measurement menus.</p>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">03</span>
+              <h2>View</h2>
+            </div>
+            <div class="toggle-list">
+              <label class="toggle-row">
+                <span><strong>Vertex labels</strong><small>Show A, B, C… in space</small></span>
+                <input type="checkbox" id="toggleLabels" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="toggle-row">
+                <span><strong>Floor grid</strong><small>Keep your bearings</small></span>
+                <input type="checkbox" id="toggleGrid" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="toggle-row">
+                <span><strong>Hidden edges</strong><small>Dashed when behind a face</small></span>
+                <input type="checkbox" id="toggleHidden" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="toggle-row">
+                <span><strong>Point guides</strong><small>Dashed lines that define named points</small></span>
+                <input type="checkbox" id="toggleDerivedGuides" checked>
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+              <label class="toggle-row">
+                <span><strong>Slow spin</strong><small>Let the solid turn itself</small></span>
+                <input type="checkbox" id="toggleSpin">
+                <span class="switch" aria-hidden="true"></span>
+              </label>
+            </div>
+          </section>
+
+          <section class="photo-reference is-empty" id="photoReference">
+            <div class="photo-ref-empty">
+              <span class="mini-camera">
+                <svg viewBox="0 0 22 22" fill="none"><path d="M3.5 7h2.6l1.2-1.9h7.4L15.9 7h2.6v9.4H3.5V7Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="11" cy="11.4" r="2.8" stroke="currentColor" stroke-width="1.4"/></svg>
+              </span>
+              <div><strong>Your question photo</strong><small>Keep it beside the model for reference</small></div>
+              <button class="text-button" id="miniPhotoBtn" type="button">Add</button>
+            </div>
+            <div class="photo-ref-loaded" id="photoRefLoaded">
+              <img id="photoThumb" alt="Question reference">
+              <div><strong>Photo reference</strong><small>Pinned while you explore</small></div>
+              <button class="icon-button small" id="clearPhotoRef" type="button" aria-label="Remove photo reference">
+                <svg viewBox="0 0 20 20" fill="none"><path d="m6 6 8 8M14 6l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <section class="stage-column" aria-label="3D visualisation">
+        <div class="stage" id="stage">
+          <canvas id="sceneCanvas" aria-label="Interactive 3D model. Drag to orbit, scroll to zoom.">Your browser does not support canvas.</canvas>
+
+          <div class="stage-toolbar">
+            <div class="tool-switch" role="group" aria-label="Analysis tool">
+              <button class="tool-button" type="button" data-tool="inspect" aria-pressed="false" title="Inspect vertices and faces">
+                <svg viewBox="0 0 19 19" fill="none"><circle cx="9.5" cy="9.5" r="6.3" stroke="currentColor" stroke-width="1.4"/><circle cx="9.5" cy="9.5" r="1.7" fill="currentColor"/><path d="M9.5 1.8v2M9.5 15.2v2M1.8 9.5h2M15.2 9.5h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                <span>Explore</span>
+              </button>
+              <button class="tool-button" type="button" data-tool="distance" aria-pressed="false" title="Distance between two points">
+                <svg viewBox="0 0 19 19" fill="none"><path d="M4 15 15 4M4 15l.2-4M4 15l4-.2M15 4l-.2 4M15 4l-4 .2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                <span>Length</span>
+              </button>
+              <button class="tool-button is-active" type="button" data-tool="linePlane" aria-pressed="true" title="Angle between a line and a plane">
+                <svg viewBox="0 0 19 19" fill="none"><path d="m2.5 13.5 7-6 7 6H2.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 16V6M9.5 6 14 2.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11.4 12.6a4 4 0 0 0 1.3-2.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span>Line ↔ Plane</span>
+              </button>
+              <button class="tool-button" type="button" data-tool="planePlane" aria-pressed="false" title="Angle between two planes">
+                <svg viewBox="0 0 19 19" fill="none"><path d="m2.4 13.8 8.2-4 6 2-8.2 4-6-2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="m2.4 13.8 8.2 4 6-2-8.2-4M10.6 9.8V3.1" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10.6 3.1 15 5.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span>Plane ↔ Plane</span>
+              </button>
+            </div>
+
+            <div class="stage-actions">
+              <button class="glass-icon-button" id="spinBtn" type="button" aria-label="Toggle slow spin" title="Slow spin">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M15.4 8.2A6 6 0 1 0 16 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M16 4.2v4.4h-4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="glass-icon-button" id="resetViewBtn" type="button" aria-label="Reset camera" title="Reset camera">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M3.5 10a6.5 6.5 0 1 0 1.9-4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3.2 3.8v4.6h4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="glass-icon-button" id="fullscreenBtn" type="button" aria-label="Fullscreen" title="Fullscreen">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M7.2 3.5H3.5v3.7M12.8 3.5h3.7v3.7M7.2 16.5H3.5v-3.7M12.8 16.5h3.7v-3.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="question-banner" id="questionBanner">
+            <div class="question-topline">
+              <span class="exam-badge" id="questionBadge">HKDSE style</span>
+              <button class="banner-close" id="closeBanner" type="button" aria-label="Hide question">
+                <svg viewBox="0 0 18 18" fill="none"><path d="m5 5 8 8M13 5l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <p id="questionText">The cuboid <em>ABCDEFGH</em> has <em>AB</em> = 8, <em>BC</em> = 6 and <em>CG</em> = 5. Find the angle between the line <em>AG</em> and the plane <em>ABCD</em>.</p>
+            <button class="question-link" id="loadWalkthroughBtn" type="button">Open worked walkthrough <span>↗</span></button>
+          </div>
+
+          <div class="stage-hint" id="stageHint">
+            <span class="hint-mouse" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none"><rect x="5" y="2.5" width="10" height="15" rx="5" stroke="currentColor" stroke-width="1.3"/><path d="M10 5.5v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </span>
+            <span id="stageHintText">Drag to orbit · scroll to zoom · click a vertex to pick it</span>
+          </div>
+
+          <div class="view-cluster" role="group" aria-label="Camera preset">
+            <button type="button" class="view-button is-active" data-view="iso">ISO</button>
+            <button type="button" class="view-button" data-view="front">FRONT</button>
+            <button type="button" class="view-button" data-view="top">TOP</button>
+            <button type="button" class="view-button" data-view="side">SIDE</button>
+          </div>
+
+          <div class="stage-badge">
+            <span class="live-dot"></span>
+            <span>LIVE MODEL</span>
+          </div>
+        </div>
+
+        <div class="stage-caption">
+          <div class="caption-left">
+            <span class="caption-kicker">Now viewing</span>
+            <strong id="modelCaption">Cuboid · AB 8 × BC 6 × CG 5</strong>
+          </div>
+          <div class="caption-right">
+            <span class="caption-note">All measurements in units</span>
+            <button class="caption-link" id="captionPhotoBtn" type="button">
+              <svg viewBox="0 0 18 18" fill="none"><path d="M2.8 6h2.1l1-1.6h6.2l1 1.6h2.1v7.6H2.8V6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="9" cy="9.7" r="2.3" stroke="currentColor" stroke-width="1.3"/></svg>
+              Compare with photo
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel right-panel" id="workbench" aria-label="Analysis workbench">
+        <div class="workbench-head">
+          <div>
+            <span class="eyebrow">Workbench</span>
+            <h2 id="workbenchTitle">Line ↔ Plane</h2>
+          </div>
+          <span class="live-pill"><span></span>LIVE</span>
+        </div>
+        <div class="workbench-body" id="workbenchBody" aria-live="polite"></div>
+        <div class="workbench-foot">
+          <button class="foot-link" id="examplesFootBtn" type="button">
+            <svg viewBox="0 0 18 18" fill="none"><path d="m9 2 1.6 4.4L15 8l-4.4 1.6L9 14l-1.6-4.4L3 8l4.4-1.6L9 2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            Try an HKDSE example
+          </button>
+          <span class="foot-credit">Built for clarity, not cramming.</span>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Photo Lab -->
+  <div class="modal" id="photoModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="photo"></div>
+    <div class="modal-card photo-modal-card" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
+      <header class="modal-head">
+        <div>
+          <span class="eyebrow">Photo Lab</span>
+          <h2 id="photoModalTitle">Turn your question into a 3D model</h2>
+        </div>
+        <button class="modal-close" type="button" data-close-modal="photo" aria-label="Close Photo Lab">
+          <svg viewBox="0 0 20 20" fill="none"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="modal-steps" aria-label="Photo Lab steps">
+        <div class="modal-step is-active" id="photoStep1"><span>1</span>Add photo</div>
+        <div class="modal-step" id="photoStep2"><span>2</span>Trace the base</div>
+        <div class="modal-step" id="photoStep3"><span>3</span>Make it 3D</div>
+      </div>
+
+      <div class="photo-error" id="photoError" hidden>
+        <span class="photo-error-mark" aria-hidden="true">!</span>
+        <div class="photo-error-copy">
+          <strong>That image could not be opened</strong>
+          <p id="photoErrorText">Try a JPG or PNG image, or take a screenshot of the question.</p>
+        </div>
+        <button class="text-button" id="photoErrorChoose" type="button">Choose another</button>
+      </div>
+
+      <div class="photo-layout">
+        <div class="photo-stage-wrap">
+          <div class="photo-drop" id="photoDrop">
+            <div class="drop-graphic">
+              <svg viewBox="0 0 64 64" fill="none">
+                <rect x="10" y="16" width="44" height="34" rx="6" stroke="currentColor" stroke-width="1.8"/>
+                <path d="m10 43 12-12 9 9 7-7 16 15" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <circle cx="43" cy="27" r="4" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M32 10V2m-5 4 5-4 5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Drop a photo of your question</h3>
+            <p>Use a clear, straight-on shot. Diagram or full question — both work.</p>
+            <div class="drop-actions">
+              <button class="button button-acid" type="button" id="takePhotoBtn">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M3.2 6.6h2.3l1.1-1.7h6.8l1.1 1.7h2.3v8.2H3.2V6.6Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10" cy="10.6" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+                Take photo
+              </button>
+              <button class="button button-outline" type="button" id="choosePhotoBtn">Choose file</button>
+            </div>
+            <span class="drop-note">JPG, PNG or WebP · stays on your device</span>
+            <button class="sample-link" id="samplePhotoBtn" type="button">No photo handy? Try a sample diagram <span>→</span></button>
+          </div>
+
+          <div class="photo-canvas-wrap" id="photoCanvasWrap" hidden>
+            <canvas id="photoCanvas" aria-label="Your question photo. Click the base corners to trace them."></canvas>
+            <div class="trace-instruction" id="traceInstruction">
+              <span class="pulse-dot"></span>
+              Tap the base corners in order, going around the base.
+            </div>
+          </div>
+        </div>
+
+        <aside class="photo-side">
+          <div class="photo-side-block">
+            <span class="side-label">Reference</span>
+            <div class="photo-file-row" id="photoFileRow" hidden>
+              <div class="file-icon">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M5 2.8h6.2L15 6.6v10.6H5V2.8Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M11 2.8v4h3.8" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="file-meta"><strong id="photoFileName">question.jpg</strong><small>On-device only</small></div>
+              <button class="text-button" id="replacePhotoBtn" type="button">Replace</button>
+            </div>
+            <div class="photo-tip" id="photoTip">
+              <strong>No photo yet</strong>
+              <p>Add one and trace the corners of the base. You can correct the model dimensions afterwards.</p>
+            </div>
+          </div>
+
+          <div class="photo-side-block" id="traceTools" hidden>
+            <div class="side-label-row">
+              <span class="side-label">Trace</span>
+              <span class="count-pill"><span id="traceCount">0</span> points</span>
+            </div>
+            <p class="side-help">Click the corners of the <strong>base</strong> around its outline. Minimum 3 points.</p>
+            <div class="trace-actions">
+              <button class="button button-outline button-small" id="undoTraceBtn" type="button" disabled>
+                <svg viewBox="0 0 18 18" fill="none"><path d="M6 5 3 8l3 3M3.5 8H11a4 4 0 0 1 0 8H8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Undo
+              </button>
+              <button class="button button-outline button-small" id="clearTraceBtn" type="button" disabled>Clear</button>
+            </div>
+            <div class="trace-quality" id="traceQuality">
+              <span class="quality-dot"></span>
+              <span>Waiting for your first corner</span>
+            </div>
+          </div>
+
+          <div class="photo-side-block" id="buildOptions" hidden>
+            <div class="side-label">Build as</div>
+            <div class="segmented small" role="group" aria-label="Solid type">
+              <button class="segmented-button is-active" type="button" data-photo-shape="prism">Vertical prism</button>
+              <button class="segmented-button" type="button" data-photo-shape="pyramid">Pyramid</button>
+            </div>
+            <label class="field-label" for="photoHeight">Height <span id="photoHeightValue">6.0</span></label>
+            <input class="range" id="photoHeight" type="range" min="1" max="14" step="0.5" value="6">
+            <label class="photo-check-row">
+              <span><strong>Clean up base</strong><small>Straighten 3- and 4-corner outlines</small></span>
+              <input type="checkbox" id="regulariseBase" checked>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <p class="fine-print">The traced outline becomes a clean base. Sliders let you adjust the final model.</p>
+          </div>
+
+          <div class="photo-side-spacer"></div>
+
+          <div class="photo-side-block photo-build-block">
+            <button class="button button-dark button-full" id="buildPhotoModelBtn" type="button" disabled>
+              Build my 3D model
+              <svg viewBox="0 0 18 18" fill="none"><path d="M3 9h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="button button-ghost button-full" id="skipPhotoBtn" type="button">Use photo as reference only</button>
+          </div>
+        </aside>
+      </div>
+      <input id="photoInput" type="file" accept="image/*" hidden>
+      <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+    </div>
+  </div>
+
+  <!-- Question Reader -->
+  <div class="modal" id="textModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="text"></div>
+    <div class="modal-card text-modal-card" role="dialog" aria-modal="true" aria-labelledby="textModalTitle">
+      <header class="modal-head">
+        <div>
+          <span class="eyebrow">Question Reader</span>
+          <h2 id="textModalTitle">Read the numbers. Build the real model.</h2>
+          <p class="modal-sub">Paste the question wording. The parser extracts the solid, exact measurements, named points, and the line or plane being asked about.</p>
+        </div>
+        <button class="modal-close" type="button" data-close-modal="text" aria-label="Close Question Reader">
+          <svg viewBox="0 0 20 20" fill="none"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="text-layout">
+        <section class="text-source">
+          <div class="text-toolbar">
+            <span class="side-label">Question text</span>
+            <button class="button button-outline button-small" id="scanTextBtn" type="button">
+              <svg viewBox="0 0 18 18" fill="none"><path d="M2.8 6h2.1l1-1.6h6.2l1 1.6h2.1v7.6H2.8V6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="9" cy="9.7" r="2.3" stroke="currentColor" stroke-width="1.3"/></svg>
+              Scan a photo
+            </button>
+          </div>
+          <textarea class="question-input" id="questionInput" spellcheck="false" placeholder="e.g. The cuboid ABCDEFGH has AB = 8, BC = 6 and CG = 5. Find the angle between the line AG and the plane ABCD."></textarea>
+          <div class="question-example-row">
+            <span>Try</span>
+            <button type="button" data-question-example="cuboid">Space diagonal</button>
+            <button type="button" data-question-example="pyramidSlant">Pyramid slant</button>
+            <button type="button" data-question-example="pyramidDihedral">Roof fold</button>
+            <button type="button" data-question-example="triPrism">Triangular prism</button>
+            <button type="button" data-question-example="tetra">Tetrahedron</button>
+            <button type="button" data-question-example="namedPoints">Named points</button>
+          </div>
+          <div class="scan-status" id="textScanStatus" hidden>
+            <span class="scan-dot"></span>
+            <span id="textScanStatusText">Reading printed text…</span>
+          </div>
+          <div class="text-source-note">
+            <strong>More accurate than tracing</strong>
+            <p>These numbers are used directly, so the 3D model matches the question instead of the perspective in a drawing.</p>
+            <small>Photo scan uses a free OCR engine loaded on demand. The photo stays on your device, but the OCR engine needs an internet connection. Check printed text before building.</small>
+          </div>
+        </section>
+
+        <aside class="text-preview-pane">
+          <div class="preview-head">
+            <span>Parser preview</span>
+            <span class="parse-badge" id="parseBadge">Waiting</span>
+          </div>
+          <div class="parse-preview" id="parsePreview">
+            <div class="parse-empty">
+              <span class="parse-empty-mark">Aa</span>
+              <strong>Paste a question to begin</strong>
+              <p>Cuboid and square-pyramid questions work best. The parser reads dimensions, labels, and the requested angle.</p>
+            </div>
+          </div>
+          <div class="text-build-actions">
+            <button class="button button-dark button-full" id="buildFromTextBtn" type="button" disabled>
+              Build exact model
+              <svg viewBox="0 0 18 18" fill="none"><path d="M3 9h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="button button-ghost button-full" id="textToPhotoBtn" type="button">Use a photo instead</button>
+          </div>
+        </aside>
+      </div>
+      <input id="textPhotoInput" type="file" accept="image/*" hidden>
+    </div>
+  </div>
+
+  <!-- Examples -->
+  <div class="modal" id="examplesModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="examples"></div>
+    <div class="modal-card examples-modal-card" role="dialog" aria-modal="true" aria-labelledby="examplesTitle">
+      <header class="modal-head">
+        <div>
+          <span class="eyebrow">HKDSE Studio</span>
+          <h2 id="examplesTitle">Three figures worth knowing</h2>
+          <p class="modal-sub">Load a classic. Then orbit it, change the numbers, and watch the angle update.</p>
+        </div>
+        <button class="modal-close" type="button" data-close-modal="examples" aria-label="Close examples">
+          <svg viewBox="0 0 20 20" fill="none"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <div class="examples-grid" id="examplesGrid"></div>
+      <div class="examples-note">
+        <span class="note-mark">i</span>
+        <p>Angles are calculated live from the model. Change a dimension and the worked solution follows.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help -->
+  <div class="modal" id="helpModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="help"></div>
+    <div class="modal-card help-modal-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <header class="modal-head">
+        <div>
+          <span class="eyebrow">Quick start</span>
+          <h2 id="helpTitle">See the figure. Then see why.</h2>
+        </div>
+        <button class="modal-close" type="button" data-close-modal="help" aria-label="Close help">
+          <svg viewBox="0 0 20 20" fill="none"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <div class="help-grid">
+        <div class="help-card">
+          <span class="help-number">01</span>
+          <div class="help-icon"><svg viewBox="0 0 26 26" fill="none"><path d="M6 19 10 7l10 2-4 12-10-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="6" cy="19" r="2" fill="currentColor"/><circle cx="16" cy="9" r="2" fill="currentColor"/></svg></div>
+          <h3>Orbit the figure</h3>
+          <p>Drag anywhere to turn the solid. Scroll or pinch to zoom. Right-drag to pan.</p>
+        </div>
+        <div class="help-card">
+          <span class="help-number">02</span>
+          <div class="help-icon"><svg viewBox="0 0 26 26" fill="none"><path d="m4 18 8-6 9 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 21V8m0 0 6-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 16a5 5 0 0 0 1.5-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <h3>Pick a tool</h3>
+          <p>Choose Length, Line ↔ Plane, or Plane ↔ Plane. Click vertices or faces directly in 3D.</p>
+        </div>
+        <div class="help-card">
+          <span class="help-number">03</span>
+          <div class="help-icon"><svg viewBox="0 0 26 26" fill="none"><path d="M4 7h6l-2 6H4V7Zm12 0h6v6h-4l-2-6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m13 17 2.5-6L18 17h-5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 17v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <h3>Read the construction</h3>
+          <p>The working panel shows the projection, the perpendicular, and the live numbers behind the angle. Use the face-on camera buttons to remove foreshortening.</p>
+        </div>
+        <div class="help-card help-card-accent">
+          <span class="help-number">04</span>
+          <div class="help-icon"><svg viewBox="0 0 26 26" fill="none"><rect x="4" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="13" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 6 9.3 4h7.4L18 6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+          <h3>Photo or exact text</h3>
+          <p>Photo Lab traces a diagram into 3D. Question Reader parses exact dimensions and named points — including midpoints, intersections and perpendicular feet — from the wording, and can scan printed text from a photo.</p>
+        </div>
+      </div>
+      <div class="help-footer">
+        <span><kbd>R</kbd> reset view <kbd>G</kbd> grid <kbd>L</kbd> labels</span>
+        <button class="button button-dark" type="button" data-close-modal="help">Start exploring</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span id="toastText">Model updated</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
